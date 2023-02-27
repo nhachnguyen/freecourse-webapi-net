@@ -7,7 +7,7 @@ namespace MyWebApiApp.Data
     public class Product
     {
         [Key]
-        public Guid ProductID { get; set; }
+        public Guid ProductId { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -24,5 +24,12 @@ namespace MyWebApiApp.Data
 
         [ForeignKey("CategoryId")]
         public Categories Categories { get; set; }
+
+        public ICollection<OrderDetail> OrderDetails { get; set; }
+
+        public Product()
+        {
+            OrderDetails = new List<OrderDetail>();
+        }
     }
 }

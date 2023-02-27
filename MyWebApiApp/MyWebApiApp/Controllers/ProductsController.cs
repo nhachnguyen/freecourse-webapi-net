@@ -21,7 +21,7 @@ namespace MyWebApiApp.Controllers
         {
             try
             {
-                var product = products.SingleOrDefault<Product>(p => p.ProductID.ToString() == id);
+                var product = products.SingleOrDefault<Product>(p => p.ProductId.ToString() == id);
                 if (product == null)
                 {
                     return NotFound();
@@ -39,7 +39,7 @@ namespace MyWebApiApp.Controllers
         {
             var product = new Product()
             {
-                ProductID = Guid.NewGuid(),
+                ProductId = Guid.NewGuid(),
                 ProductName = productVM.ProductName,
                 UnitPrice = productVM.UnitPrice
             };
@@ -56,7 +56,7 @@ namespace MyWebApiApp.Controllers
         {
             try
             {
-                var product = products.SingleOrDefault<Product>(p => p.ProductID.ToString() == id);
+                var product = products.SingleOrDefault<Product>(p => p.ProductId.ToString() == id);
                 if (product == null)
                 {
                     return NotFound();
@@ -78,7 +78,7 @@ namespace MyWebApiApp.Controllers
         {
             try
             {
-                var product = products.SingleOrDefault<Product>(p => p.ProductID.ToString() == id);
+                var product = products.SingleOrDefault<Product>(p => p.ProductId.ToString() == id);
                 if (product == null)
                 {
                     return NotFound();

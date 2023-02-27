@@ -8,6 +8,6 @@
 
     public class Product: ProductVM
     {
-        public Guid ProductID { get; set; }
+        public Guid ProductId { get; set; }
     }
 }
