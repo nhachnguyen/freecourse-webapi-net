@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyWebApiApp.Data;
+using MyWebApiApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,9 @@ builder.Services.AddDbContext<MyDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("MyCompanyDB"));
 });
+
+//builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepositoryInMemory>();
 
 var app = builder.Build();
 
