@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyWebApiApp.Services;
 
-namespace MyWebApiApp.Models
+namespace MyWebApiApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -16,11 +16,11 @@ namespace MyWebApiApp.Models
         }
 
         [HttpGet]
-        public IActionResult GetAllProduct(string search)
+        public IActionResult GetAllProduct(string? search, double? fromPrice, double? toPrice, string? sortBy, int page = 1)
         {
             try
             {
-                var result = _productRepository.GetAll(search);
+                var result = _productRepository.GetAll(search, fromPrice, toPrice, sortBy, page);
                 return Ok(result);
             }
             catch
