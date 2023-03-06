@@ -6,6 +6,7 @@ using MyWebApiApp.Data;
 using MyWebApiApp.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace MyWebApiApp.Controllers
@@ -27,7 +28,7 @@ namespace MyWebApiApp.Controllers
         public IActionResult Validate(LoginModel model)
         {
             var user = _context.Users.SingleOrDefault(u => u.UserName == model.UserName && u.Password == model.Password);
-            if(user == null)
+            if (user == null)
             {
                 return Ok(new ApiResponse
                 {
@@ -41,12 +42,12 @@ namespace MyWebApiApp.Controllers
             return Ok(new ApiResponse
             {
                 Success = true,
-                Message ="Authenticate success",
+                Message = "Authenticate success",
                 Data = GenerateToken(user)
             });
         }
 
-        private string GenerateToken (User user)
+        private TokenModel GenerateToken(User user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var secretKeyBytes = Encoding.UTF8.GetBytes(_appSetting.SecretKey);
@@ -64,12 +65,28 @@ namespace MyWebApiApp.Controllers
                     new Claim("TokenId", Guid.NewGuid().ToString())
                 }),
                 Expires = DateTime.UtcNow.AddMinutes(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey (secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
             };
 
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
 
-            return jwtTokenHandler.WriteToken(token);
+            var accessToken = jwtTokenHandler.WriteToken(token);
+            return new TokenModel
+            {
+                AccessToken = accessToken,
+                RefreshToken = GenerateRefreshToken()
+            };
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var random = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(random);
+
+                return Convert.ToBase64String(random);
+            }
         }
     }
 }
